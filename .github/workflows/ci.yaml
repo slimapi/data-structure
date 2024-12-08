@@ -1,0 +1,58 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - '*'
+    tags-ignore:
+      - '*'
+
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  php84:
+    name: Build & Test (PHP 8.4)
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Build Docker Image
+        run: |
+          set -a
+          source "$GITHUB_WORKSPACE/.env"
+          set +a
+          docker build --build-arg BASE_IMAGE="$BASE_IMAGE_PHP84" --tag "$GITHUB_SHA" .
+
+      - name: Start Docker Container
+        run: docker run --detach --env ENVIRONMENT=ci --env XDEBUG_MODE=coverage --name=$GITHUB_SHA $GITHUB_SHA
+
+      - name: Print Versions
+        run: |
+          echo "EditorConfig-Checker $(docker exec "$GITHUB_SHA" ec --version)"
+          docker exec "$GITHUB_SHA" php --version
+          docker exec "$GITHUB_SHA" composer --version
+          docker exec "$GITHUB_SHA" phpstan --version
+          docker exec "$GITHUB_SHA" phpcs --version
+          docker exec "$GITHUB_SHA" phpunit --version
+
+      - name: EditorConfig-Checker
+        run: docker exec $GITHUB_SHA ec
+
+      - name: PHP_CodeSniffer
+        run: docker exec $GITHUB_SHA phpcs
+
+      - name: PHPStan
+        run: docker exec $GITHUB_SHA phpstan
+
+      - name: PHPUnit
+        run: |
+          docker exec $GITHUB_SHA phpunit --coverage-clover coverage.xml
+          docker exec $GITHUB_SHA cat coverage.xml > coverage.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5.1.1
+        with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
