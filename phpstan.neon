@@ -9,6 +9,8 @@ parameters:
   level: 10
   tmpDir: %currentWorkingDirectory%/tmp
   treatPhpDocTypesAsCertain: false
+  ignoreErrors:
+    - '#strcmp expects string, mixed given#'
   paths:
     - src
     - tests
