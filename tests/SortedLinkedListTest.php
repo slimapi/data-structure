@@ -51,6 +51,17 @@ class SortedLinkedListTest extends TestCase
         self::assertEquals(['grace', 'banana', 'apple'], $list->toArray());
     }
 
+    public function testRemove(): void
+    {
+        $list = new SortedLinkedList()
+            ->insert(2)
+            ->insert(1)
+            ->insert(3)
+            ->remove(2);
+
+        self::assertEquals([1, 3], $list->toArray());
+    }
+
     // ******************
     // *** EDGE CASES ***
     // ******************
@@ -63,5 +74,35 @@ class SortedLinkedListTest extends TestCase
         $list = new SortedLinkedList();
         $list->insert('banana');
         $list->insert(3);
+    }
+
+    public function testRemoveLengthZero(): void
+    {
+        self::expectException(InvalidArgumentException::class);
+        self::expectExceptionMessage('Cannot remove from an empty list.');
+
+        new SortedLinkedList()
+            ->remove(0);
+    }
+
+    public function testRemoveUnknown(): void
+    {
+        self::expectException(InvalidArgumentException::class);
+        self::expectExceptionMessage("Value ['apple'] not found in the list.");
+
+        new SortedLinkedList()
+            ->insert('banana')
+            ->remove('apple');
+    }
+
+    public function testRemoveLast(): void
+    {
+        $list = new SortedLinkedList()
+            ->insert(2)
+            ->insert(1)
+            ->insert(3)
+            ->remove(3);
+
+        self::assertEquals([1, 2], $list->toArray());
     }
 }

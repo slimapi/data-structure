@@ -51,6 +51,33 @@ class SortedLinkedList
         return $this;
     }
 
+    public function remove(mixed $value): self
+    {
+        // If the list is empty, we cannot remove anything.
+        if ($this->head === null) {
+            throw new InvalidArgumentException('Cannot remove from an empty list.');
+        }
+
+        // If the list has only one element, and it matches the value, simply remove the head.
+        if ($this->head->value === $value) {
+            $this->head = $this->head->next;
+            return $this;
+        }
+
+        // Traverse the list and look for the node to remove.
+        $currentNode = $this->head;
+        while ($currentNode->next !== null) {
+            if ($currentNode->next->value === $value) {
+                // If we find the node that matches the value, remove it.
+                $currentNode->next = $currentNode->next->next;
+                return $this;
+            }
+            $currentNode = $currentNode->next;
+        }
+
+        throw new InvalidArgumentException(sprintf('Value [%s] not found in the list.', var_export($value, true)));
+    }
+
     /**
      * @return mixed[]
      */
