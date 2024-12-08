@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace SlimAPI\DataStructure;
 
+use Countable;
+use Generator;
 use InvalidArgumentException;
 use LogicException;
 use SlimAPI\DataStructure\SortedLinkedList\Direction;
@@ -13,9 +15,11 @@ use SlimAPI\DataStructure\Tests\SortedLinkedListTest;
 /**
  * @see SortedLinkedListTest
  */
-class SortedLinkedList
+class SortedLinkedList implements Countable
 {
     private ?Node $head = null;
+
+    private int $length = 0;
 
     public function __construct(private readonly Direction $sorting = Direction::ASC)
     {
@@ -29,6 +33,7 @@ class SortedLinkedList
         // If the list is empty, set the new node as the head.
         if ($this->head === null) {
             $this->head = $node;
+            $this->length++;
             return $this;
         }
 
@@ -36,6 +41,7 @@ class SortedLinkedList
         if ($this->compare($this->head->value, $value)) {
             $node->next = $this->head;
             $this->head = $node;
+            $this->length++;
             return $this;
         }
 
@@ -48,6 +54,7 @@ class SortedLinkedList
         $node->next = $currentNode->next;
         $currentNode->next = $node;
 
+        $this->length++;
         return $this;
     }
 
@@ -61,6 +68,7 @@ class SortedLinkedList
         // If the list has only one element, and it matches the value, simply remove the head.
         if ($this->head->value === $value) {
             $this->head = $this->head->next;
+            $this->length--;
             return $this;
         }
 
@@ -70,6 +78,7 @@ class SortedLinkedList
             if ($currentNode->next->value === $value) {
                 // If we find the node that matches the value, remove it.
                 $currentNode->next = $currentNode->next->next;
+                $this->length--;
                 return $this;
             }
             $currentNode = $currentNode->next;
@@ -91,6 +100,20 @@ class SortedLinkedList
         }
 
         return $data;
+    }
+
+    public function toGenerator(): Generator
+    {
+        $currentNode = $this->head;
+        while ($currentNode !== null) {
+            yield $currentNode->value;
+            $currentNode = $currentNode->next;
+        }
+    }
+
+    public function count(): int
+    {
+        return $this->length;
     }
 
     protected function compare(mixed $a, mixed $b): bool

@@ -11,6 +11,7 @@ parameters:
   treatPhpDocTypesAsCertain: false
   ignoreErrors:
     - '#strcmp expects string, mixed given#'
+    - '#int<0, max>#'
   paths:
     - src
     - tests

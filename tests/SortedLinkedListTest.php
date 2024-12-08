@@ -62,6 +62,22 @@ class SortedLinkedListTest extends TestCase
         self::assertEquals([1, 3], $list->toArray());
     }
 
+    public function testToGenerator(): void
+    {
+        $list = new SortedLinkedList()
+            ->insert('banana')
+            ->insert('grace')
+            ->insert('apple');
+
+        $expected = ['apple', 'banana', 'grace'];
+        $actual = [];
+        foreach ($list->toGenerator() as $value) {
+            $actual[] = $value;
+        }
+
+        self::assertEquals($expected, $actual, 'The generator should yield values in the correct order.');
+    }
+
     // ******************
     // *** EDGE CASES ***
     // ******************
@@ -83,6 +99,18 @@ class SortedLinkedListTest extends TestCase
 
         new SortedLinkedList()
             ->remove(0);
+    }
+
+    public function testRemoveLengthOne(): void
+    {
+        $list = new SortedLinkedList()
+            ->insert(0);
+
+        self::assertCount(1, $list);
+
+        $list->remove(0);
+
+        self::assertCount(0, $list);
     }
 
     public function testRemoveUnknown(): void
