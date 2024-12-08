@@ -1,0 +1,8 @@
+*/.*
+.*
+!.docker
+!.ecrc
+!.editorconfig
+Dockerfile
+vendor
+vendor-global

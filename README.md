@@ -1,2 +1,3 @@
-# data-structure
-📚 SlimAPI - Data Structures
+# 📚 SlimAPI - Data Structures
+
+A collection of reusable and efficient data structures for various use cases.

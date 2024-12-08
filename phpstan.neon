@@ -1,0 +1,14 @@
+# https://phpstan.org/config-reference
+
+includes:
+  - /root/.composer/vendor/phpstan/phpstan-strict-rules/rules.neon
+  - /root/.composer/vendor/phpstan/phpstan-phpunit/extension.neon
+  - /root/.composer/vendor/phpstan/phpstan-phpunit/rules.neon
+
+parameters:
+  level: 10
+  tmpDir: %currentWorkingDirectory%/tmp
+  treatPhpDocTypesAsCertain: false
+  paths:
+    - src
+    - tests

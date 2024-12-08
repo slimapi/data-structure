@@ -1,0 +1,7 @@
+public
+tmp
+vendor/
+vendor-global/
+composer.lock
+coverage.xml
+.phpunit.result.cache

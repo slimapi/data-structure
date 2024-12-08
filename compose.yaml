@@ -1,0 +1,12 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        - BASE_IMAGE=${BASE_IMAGE_PHP84}
+
+    volumes:
+      - .:/var/www
+
+    environment:
+      XDEBUG_MODE: coverage,debug
