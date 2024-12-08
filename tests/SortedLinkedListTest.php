@@ -51,6 +51,16 @@ class SortedLinkedListTest extends TestCase
         self::assertEquals(['grace', 'banana', 'apple'], $list->toArray());
     }
 
+    public function testInsertDuplicate(): void
+    {
+        self::expectException(InvalidArgumentException::class);
+        self::expectExceptionMessage('That value already exists.');
+
+        new SortedLinkedList()
+            ->insert('apple')
+            ->insert('apple');
+    }
+
     public function testRemove(): void
     {
         $list = new SortedLinkedList()

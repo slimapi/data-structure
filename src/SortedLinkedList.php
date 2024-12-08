@@ -51,6 +51,10 @@ class SortedLinkedList implements Countable
             $currentNode = $currentNode->next;
         }
 
+        if ($value === $currentNode->value) {
+            throw new InvalidArgumentException('That value already exists.');
+        }
+
         $node->next = $currentNode->next;
         $currentNode->next = $node;
 
